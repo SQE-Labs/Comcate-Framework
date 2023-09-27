@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [Suite]" guice-stage="DEVELOPMENT">
+  <test thread-count="5" parallel="classes" name="Test(failed)">
+    <classes>
+      <class name="TestCases.ForcedAbatement">
+        <methods>
+          <include name="ForcedAbatement_DeleteAddedActivity"/>
+          <include name="ForceAbatement_AbatementDetailsPopupopen"/>
+          <include name="ForceAbatement_AttachmentSectionAppearFAADocSelected"/>
+          <include name="ForcedAbatement_CloseEditForcedAbatementActivityPopup"/>
+          <include name="ForcedAbatement_VerifyAbleToSelectActivityType"/>
+          <include name="flushReport"/>
+          <include name="ForcedAbatement_AddForcedAbatementActivity"/>
+          <include name="ForcedAbatement_ConfirmationPopupForDeletingActivity"/>
+          <include name="ForcedAbatement_EditAddedActivity"/>
+          <include name="setUp"/>
+          <include name="ForceAbatement_AbatementDetailsDetails"/>
+          <include name="ForcedAbatement_OpenEditForcedAbatementActivityPopup"/>
+          <include name="ForceAbatement_SelectedAttachmentPopulatedonPrintPreview"/>
+          <include name="deleteExistingReport"/>
+          <include name="ForceAbatement_ContactAppearUnderResponsibleParty"/>
+          <include name="ForcedAbatement_ValidationMsgForEmptyDocumentNote"/>
+          <include name="closeDriver"/>
+        </methods>
+      </class> <!-- TestCases.ForcedAbatement -->
+    </classes>
+  </test> <!-- Test(failed) -->
+</suite> <!-- Failed suite [Suite] -->
