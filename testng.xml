@@ -3,15 +3,18 @@
 <suite name="Suite">
 	<test thread-count="2" name="Test" parallel="classes">
 		<classes>
-			<!-- <class name="TestCases.PerformInspection" /> 
+			<class name="TestCases.CCP"/>
 			<class name="TestCases.CloseCase" />
 			<class name="TestCases.DashBoard" />
 			<class name="TestCases.UserManagement" /> 
 			<class name="TestCases.CLP" />
 			<class name="TestCases.CaseAssignment" />
-			<class name="TestCases.ReopenCases" />-->
+			<class name="TestCases.ReopenCases" />
+			<class name="TestCases.ForcedAbatement" /> 
 			<class name="TestCases.Notices" />
-			<class name="TestCases.ForcedAbatement" />
+			<class name="TestCases.PerformInspection" /> 
+			
+			
 		</classes>
 	</test>
 </suite>

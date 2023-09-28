@@ -1,7 +1,6 @@
 package CommonMethods;
 
 import BrowsersBase.BrowsersInvoked;
-import BrowsersBase.BrowsersInvoked;
 import POM.AppPreRequisiteUtility;
 import POM.TemplateManagementUtility;
 import POM.UserManagementUtility;
@@ -14,8 +13,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.asserts.SoftAssert;
-
-import POM.UserManagementUtility;
 
 import java.time.Duration;
 
@@ -40,7 +37,7 @@ public class CECommonMethods extends BrowsersInvoked {
         WebElement CCPBtnJSE =helper.findElementByCssSelector("div.app-header__new");
     	//WebElement CCPBtnJSE =helper.GetWebElementByJS("#header > div.app-header__right > div:nth-child(2) > div.app-header__new')");
         helper.WaitUntilVisible(CCPBtnJSE);
-       // helper.WaitUntilVisible(CCPBtnJSE);
+        helper.WaitUntilVisible(CCPBtnJSE);
         helper.WaitForElementInteractable(CCPBtnJSE);
         helper.moveToWebElement(CCPBtnJSE);
         helper.ClickOnWE20(CCPBtnJSE);
@@ -328,8 +325,37 @@ public class CECommonMethods extends BrowsersInvoked {
             s62.assertEquals(false, true);
             s62.assertAll();
         }
-       
     }
+    
+    
+    public void CE_AddViolationWithEntity(String Vname , String entityName) throws InterruptedException {
 
+        if (agencyConfig.equalsIgnoreCase(agencyConfigGisDirect2o)) {
+        	helper.WaitUntilVisible(CCPUtility.ViolationSearchBox);
+        	helper.WaitForElementInteractable(CCPUtility.ViolationSearchBox);
+        	helper.SendKeys(CCPUtility.ViolationSearchBox, Vname);
+        	helper.WaitUntilVisible(CCPUtility.violationList20);
+        	helper.WaitForElementInteractable(CCPUtility.violationList20);
+        	helper.ClickOn(CCPUtility.violationList20);
+        	helper.WaitUntilVisible(CCPUtility.EntityField1);
+        	helper.WaitForElementInteractable(CCPUtility.EntityField1);
+        	helper.SendKeys(CCPUtility.EntityField1, entityName);
+        	helper.WaitForElementInteractable(CCPUtility.AddButton);
+            helper.ClickOn(CCPUtility.AddButton);
 
-}
+        } else {
+        	helper.WaitUntilVisible(CCPUtility.ViolationSearchBox);
+        	helper.WaitForElementInteractable(CCPUtility.ViolationSearchBox);
+        	helper.ClickOn(CCPUtility.ViolationSearchBox);
+            helper.SendKeys(CCPUtility.ViolationSearchBox, Vname);
+            helper.WaitUntilVisible(CCPUtility.ViolationList);
+            helper.WaitForElementInteractable(CCPUtility.ViolationList);
+            helper.ClickOn(CCPUtility.ViolationList);
+            helper.WaitUntilVisible(CCPUtility.EntityField1);
+            helper.WaitForElementInteractable(CCPUtility.EntityField1);
+            helper.SendKeys(CCPUtility.EntityField1,entityName );
+            helper.WaitForElementInteractable(CCPUtility.AddButton);
+            helper.ClickOn(CCPUtility.AddButton);
+        }
+    }
+    }

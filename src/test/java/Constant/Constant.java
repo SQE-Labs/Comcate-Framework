@@ -12,10 +12,6 @@ public class Constant {
 	public static String ClosedStatus;
 	
 	
-	
-	
-	
-	
 	// WebElement Constant
 	public static List<WebElement> modalCount;
 	public static WebElement VoluntaryBtnState;
