@@ -101,7 +101,7 @@ public class DashBoard extends BrowsersInvoked{
 
 	   
 	    @Test(priority = 8)
-	    public  void TC_Dashboard_AllStaff_OpenCasesForMyAgency() {
+	    public  void TC_Dashboard_AllStaff_OpenCasesForMyAgency() throws InterruptedException {
 	        obj.TC_Dashboard_AllStaff_OpenCasesForMyAgency();
 	    }
 
@@ -142,7 +142,7 @@ public class DashBoard extends BrowsersInvoked{
 
 	   
 	    @Test(priority = 14)
-	    public  void TC_Dashboard_CompareCountOfCasesWithCLP() {
+	    public  void TC_Dashboard_CompareCountOfCasesWithCLP() throws InterruptedException {
 	        
 	       obj.TC_Dashboard_CompareCountOfCasesWithCLP();
 	    }

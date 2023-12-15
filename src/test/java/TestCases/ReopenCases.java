@@ -15,7 +15,7 @@ import POM.ReopenCasesUtility;
 
 public class ReopenCases extends BrowsersInvoked{
 	
-	private WebDriver driver;
+	public WebDriver driver;
 	ExtentReportClass extentClass;
 	ITestResult result;
 	ReopenCasesUtility reopenCase;
@@ -27,11 +27,11 @@ public class ReopenCases extends BrowsersInvoked{
 		reopenCase = new ReopenCasesUtility(driver);
 	}
 	
-	@AfterClass
-	public void closeDriver() {
-		BrowsersInvoked.tearDown(driver);
-	}
-	
+//	@AfterClass
+//	public void closeDriver() {
+//		BrowsersInvoked.tearDown(driver);
+//	}
+//	
 	@AfterMethod
 	public void flushReport(Method method, ITestResult result) {
 		Test test = method.getAnnotation(Test.class);

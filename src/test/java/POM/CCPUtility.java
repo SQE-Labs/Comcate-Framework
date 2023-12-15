@@ -29,9 +29,11 @@ public class CCPUtility extends Helper {
 	public CCPUtility(WebDriver driver) {
 		super(driver);
 		this.driver = driver;
-		CECommonMethodS = new CECommonMethods(driver);
 		log = new LoginUtility(driver);
+		CECommonMethodS=new CECommonMethods(driver);
 	}
+
+    public static By performInspectionToogel = By.xpath("//button[text()='Perform Inspection']");
 
 	public static String agencyConfig = BrowsersInvoked.agencyConfig;
 	public static String agencyConfigGisLite = BrowsersInvoked.agencyConfigGisLite;
@@ -61,6 +63,9 @@ public class CCPUtility extends Helper {
 	public static String cRMOption = "//label[text()='Customer submission']";
 	public static String cCPTitle = "//h1[text()='Create A Case']";
 	public static String plusIconToCECRM = "//*[@class='app-header__new']";
+    public static By performInspectionAndCreateCase = By.xpath("//button[text()='Create & Perform Inspection']");
+    public static By proActiveButton = By.xpath("//button[text()='Proactive'][@class='square-btn btn btn-primary']");
+
 	public static String globalValidMsg = "//div[@class='create-case__global-error']";
 	public static String infoMsg = "//div[@class='location-tile__display-data-empty-message tile-empty-msg']";
 	public static String CCbutton = "//div/button[text()='Create Case']";
@@ -137,7 +142,7 @@ public class CCPUtility extends Helper {
 	public static String addContactFld = "//div[@class='contact-tile tile']//input";
 	public static String crtNewContact = "//div[@class='contact-tile tile']//div[@class='react-autosuggest__function']";
 	public static String contactPopup = "//div[@class='full-page-modal__header']/h1[text()='Create a Contact']";
-	public static String crtContactBtn = "(//div[@class='full-page-modal__header']//button[2])[2]";
+	public static String crtContactBtn = "//button[text()='Create Contact']";
 	public static String contactErrMsg = "(//span[@class='field__error'])[1]";
 	public static String nameField = "//input[@name='name']";
 	public static String violationsList = "//div[@class='react-autosuggest__suggestion-element']/div";

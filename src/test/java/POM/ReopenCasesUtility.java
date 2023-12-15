@@ -18,13 +18,12 @@ public class ReopenCasesUtility extends Helper {
 
 	public WebDriver driver;
 	LoginUtility log;
-	
 
 	public ReopenCasesUtility(WebDriver driver) {
 		super(driver);
 		this.driver = driver;
 		log = new LoginUtility(driver);
-		
+
 	}
 
 	public static String statusColumnSort = "//div[text()='Status']";
@@ -42,7 +41,7 @@ public class ReopenCasesUtility extends Helper {
 	public static String dateReopenedCase = "//h4[text()='Case Reopened']/following-sibling::span";
 	public static String userInfoRCP = "//h4[text()='Case Reopened']/following::label[@class='case-activity__user-info']";
 	public static String CancelButton = "//button[text()='Cancel']";
-	
+
 	public static By StatusColumnSort = By.xpath(statusColumnSort);
 	public static By ReOpenCaseGrid = By.xpath(reOpenCaseGrid);
 	public static By ClosedCaseGrid = By.xpath(closedCaseGrid);
@@ -65,49 +64,59 @@ public class ReopenCasesUtility extends Helper {
 	}
 
 	public void ReopenCase_PreRequisite() throws InterruptedException {
-		driver.navigate().to(BrowsersInvoked.URLDashboard);
-		WaitForPageLoadTime(5);
-		WaitForCurserRunning(5);
-		WaitUntilVisible(CLPUtility.CLP);
-		WaitUntilPresent(CLPUtility.CLP);
+		
+		WaitForPageLoadTime(10);
+		Thread.sleep(5000);
+		
 		WaitForElementInteractable(CLPUtility.CLP);
-		ClickByJsExecuter(CLPUtility.CLP);
-		WaitUntilVisible(StatusColumnSort);
-		WaitUntilPresent(StatusColumnSort);
-		WaitForElementInteractable(StatusColumnSort);
-		ClickOn(StatusColumnSort);
-		driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(2));
-		WaitUntilPresent(StatusColumnSort);
-		WaitForElementInteractable(StatusColumnSort);
-		ClickByJsExecuter(StatusColumnSort);
-		driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(3));
+		ClickOn(CLPUtility.CLP);
+		Thread.sleep(5000);
+		WaitUntilVisible(By.cssSelector("div.table-container__table"));
+		forcedWaitTime(5);
+		
+		
+		ClickByJsExecuter(By.xpath("(//*[@class='dropdown__selector__selected']//span)[4]"));
+		ClickByJsExecuter(By.xpath("//*[@class='checkbox-holder checkbox-holder--radio']//input[@name='Closed']"));
+		ClickByJsExecuter(By.xpath("(//*[@class='dropdown__selector__selected']//span)[4]"));
+
+		
+		
+		WaitUntilVisible(By.cssSelector("div.table-container__table"));
 		ScrollIntoView(StatusColumnSort);
-		int checkOpen = driver.findElements(ReopenCasesUtility.ClosedCaseGrid).size();
+		int checkOpen = driver.findElements(ClosedCaseGrid).size();
 		if (checkOpen > 0) {
-			WaitUntilVisible(ReopenCasesUtility.ClosedCaseGrid);
-			WaitUntilPresent(ReopenCasesUtility.ClosedCaseGrid);
-			ScrollIntoView(ReopenCasesUtility.ClosedCaseGrid);
-			WaitForElementInteractable(ReopenCasesUtility.ClosedCaseGrid);
-			ClickByJsExecuter(ReopenCasesUtility.ClosedCaseGrid);
-			WaitUntilInvisible(ReopenCasesUtility.ClosedCaseGrid);
+			WaitUntilVisible(ClosedCaseGrid);
+			WaitUntilPresent(ClosedCaseGrid);
+			ScrollIntoView(ClosedCaseGrid);
+			WaitForElementInteractable(ClosedCaseGrid);
+			ClickByJsExecuter(ClosedCaseGrid);
+			WaitUntilElementInvisible(ClosedCaseGrid);
 		} else {
 			ClickOn(StatusColumnSort);
 			WaitforCustometime(5);
-			int checktOpen = driver.findElements(ReopenCasesUtility.ClosedCaseGrid).size();
+			WaitUntilElementInvisible(By.cssSelector("div.table-container__table table_disabled"));
+			WaitUntilVisible(By.cssSelector("div.table-container__table"));
+			int checktOpen = driver.findElements(ClosedCaseGrid).size();
 			if (checktOpen > 0) {
-				WaitUntilPresent(ReopenCasesUtility.ClosedCaseGrid);
-				ScrollIntoView(ReopenCasesUtility.ClosedCaseGrid);
-				WaitForElementInteractable(ReopenCasesUtility.ClosedCaseGrid);
-				ClickByJsExecuter(ReopenCasesUtility.ClosedCaseGrid);
-				WaitUntilInvisible(ReopenCasesUtility.ClosedCaseGrid);
+				WaitUntilPresent(ClosedCaseGrid);
+				ScrollIntoView(ClosedCaseGrid);
+				WaitForElementInteractable(ClosedCaseGrid);
+				ClickByJsExecuter(ClosedCaseGrid);
+				WaitUntilElementInvisible(ClosedCaseGrid);
 
 			}
+		
 		}
 		WaitForCurserRunning(5);
-		WaitUntilVisible(CCPUtility.CaseStatus);
-		WaitUntilPresent(CCPUtility.CaseStatus);
-		String ClosedStatus = GetText(CCPUtility.CaseStatus);
-		Assert.assertEquals("Closed", ClosedStatus);
+		String ClosedStatus;
+		
+			WaitForElementInteractable(CCPUtility.CaseStatus);
+			
+			 ClosedStatus = GetText(CCPUtility.CaseStatus);
+		
+		
+	Assert.assertEquals("Closed",ClosedStatus);
+
 	}
 
 	public void ReopenCase_OpenReopenCasePopup() throws InterruptedException {

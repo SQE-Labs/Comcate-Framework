@@ -62,7 +62,7 @@ public class CLPUtility extends Helper {
 	public static String deleteCaseButton = "//button[text()='Delete Case']";
 	public static String validationMsgDeleteCase = "//div[@class='modal-base__error modal-base__error--show']";
 	public static String casesCount = "//div[@class='cs-listing__section__header']//following-sibling::span";
-	public static String casesCount1 = "(//div[@class='cs-listing__section__header']//following-sibling::span)[1]";
+	public static String casesCount1= "(//div[@class='cs-listing__section__header']//following-sibling::span)[1]";
 	public static String doNotDeleteButton = "//button[text()='Do Not Delete']";
 	public static String paginationCount = "//span[@class='table__pagination-of-text']";
 	public static String violationTypePF = "//label[text()='Violation Type']";

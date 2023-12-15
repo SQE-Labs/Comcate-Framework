@@ -41,6 +41,7 @@ public class Helper {
 	}
 	
 	
+	
 	public  void ClickOn(WebElement element,String...label ) {
 		wait.until(ExpectedConditions.visibilityOf(element));
 		wait.until(ExpectedConditions.elementToBeClickable(element));
@@ -65,7 +66,14 @@ public class Helper {
 		return text;
 	}
 	
-	
+	 public  boolean ElementIsSelected(By path) {
+	        try {
+	            WebElement ele = driver.findElement(path);
+	            return ele.isSelected();
+	        } catch (Exception e) {
+	            return false;
+	        }
+	    }
 	
 	  public  void WaitUntilPresent(By element) {
 	        try {
@@ -74,6 +82,17 @@ public class Helper {
 	                    .pollingEvery(Duration.ofMillis(Long.parseLong(PropertiesUtils.getPropertyValue("waitTime5"))))
 	                    .ignoring(NoSuchElementException.class,ElementNotInteractableException.class);
 	            fluentWait1.until(ExpectedConditions.presenceOfElementLocated(element));
+	        } catch (WebDriverException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	  public  void WaitUntilClickable(WebElement element) {
+	        try {
+	            Wait<WebDriver> fluentWait1 = new FluentWait<WebDriver>(driver)
+	                    .withTimeout(Duration.ofSeconds(Long.parseLong(PropertiesUtils.getPropertyValue("waitTime20"))))
+	                    .pollingEvery(Duration.ofMillis(Long.parseLong(PropertiesUtils.getPropertyValue("waitTime5"))))
+	                    .ignoring(NoSuchElementException.class,ElementNotInteractableException.class);
+	            fluentWait1.until(ExpectedConditions.elementToBeClickable(element));
 	        } catch (WebDriverException e) {
 	            e.printStackTrace();
 	        }
@@ -535,6 +554,21 @@ public class Helper {
 	    	Actions a = new Actions(driver);
 	    	a.moveToElement(element);
 	    }
+	    public void moveToWebElementAndClick(WebElement element) {
+	    	Actions a = new Actions(driver);
+	    	a.moveToElement(element).click();
+	    }
+	    public void moveToWebElementAndClick(By element) {
+	    	Actions a = new Actions(driver);
+	    	 WebElement ele = driver.findElement(element);
+	    	a.moveToElement(ele).click();
+	    }
+	    
+	    
+	    public void moveToWebElementAndClickByCordinates(By element, int xCord, int yCord) {
+	    	Actions a = new Actions(driver);
+	    	 WebElement ele = driver.findElement(element);
+	         a.moveToElement(ele, xCord, yCord).click().perform();	    }
 	
 	
 	

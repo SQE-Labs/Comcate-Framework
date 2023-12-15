@@ -2,6 +2,7 @@ package POM;
 
 import BrowsersBase.BrowsersInvoked;
 
+
 import java.time.Duration;
 import java.util.List;
 
@@ -24,17 +25,19 @@ public class PerformInspectionUtility extends Helper {
 
 	public WebDriver driver;
 	LoginUtility log;
-	CECommonMethods ceMethods;
+	CECommonMethods CEcommonMethod;
 	CRMCommonMethods crmMethods;
 	CLPUtility cLPUtility;
+	PerformInspectionUtility PI;
 
 	public PerformInspectionUtility(WebDriver driver) {
 		super(driver);
 		this.driver = driver;
 		log = new LoginUtility(driver);
-		ceMethods = new CECommonMethods(driver);
+		CEcommonMethod = new CECommonMethods(driver);
 		crmMethods = new CRMCommonMethods(driver);
 		cLPUtility = new CLPUtility(driver);
+		//PI=new PerformInspectionUtility(driver);
 
 	}
 
@@ -124,10 +127,10 @@ public class PerformInspectionUtility extends Helper {
 	public static String caseNotesIcon = "(//button[@class='attach-btn btn btn-primary'])[2]";
 	public static String caseNotePopupValidate = "//div[text()='Add Case Note']";
 	public static String noticePopupCancel = "//button[text()='Cancel']";
-	public static String validationMessage = "//label[@title='Add Case Note']/../../span";
+	public static String validationMessage = "//span[text()='The Internal comment is required.']";
 	public static String noteTextArea = "//textarea[@name='caseNote']";
 	public static String notes5000valMsg = "//span[text()='5000 character limit.']";
-	public static String createNoteButton = "//button[text()='Create Note']";
+	public static String createNoteButton = "//button[text()='Create Comment']";
 	public static String createdNotesTitle = "//div[@id='case-notes']//h2/span";
 	public static String newNoticeToggle = "//button[text()='New Notice']";
 
@@ -223,6 +226,11 @@ public class PerformInspectionUtility extends Helper {
 	public static By CreateNoteButton = By.xpath(createNoteButton);
 	public static By CreatedNotesTitle = By.xpath(createdNotesTitle);
 	public static By NewNoticeToggle = By.xpath(newNoticeToggle);
+	
+	public static By addAnotherViolationBox=By.xpath("(//div[@role='combobox'])[3]");
+	public static By selectViolAnimalFromDropdown=By.cssSelector(".list-label");
+	public static By animalColourBox=By.xpath("//*[@class='field__input row']//*[@name='568']");
+	public static By addBtn_For_EntitiyViolation=By.xpath("//button[text()='Add']");
 
 	public static String searchLocation_text = "//input[@placeholder='Enter Address, APN or Drop a pin on Map']";
 	public static By SearchLocation_text = By.xpath(searchLocation_text);
@@ -255,6 +263,8 @@ public class PerformInspectionUtility extends Helper {
 	public static String streetCityafter;
 	public static String streetZipafter;
 	public static String streetAPNafter;
+	public static By validTogglebtn = By.xpath("//button[@class='square-btn btn btn-danger'][text()='Valid']");
+
 
 	static String InspectionNote = RandomStrings.RequiredString(15);
 
@@ -265,15 +275,98 @@ public class PerformInspectionUtility extends Helper {
 
 	public void PerformInspection_PreRequisite_CDP() {
 		try {
-			ceMethods.CreateACase();
+			CEcommonMethod.CreateACase();
 			String CaseId = GetText(By.xpath("//h2[@class='case-details__case-number']")).split("#")[1];
-			ceMethods.CloseCaseDetailPage();
-			ceMethods.CCP_SearchCaseAndNavigatetoCDP(CaseId);
+			CEcommonMethod.CloseCaseDetailPage();
+			CEcommonMethod.CCP_SearchCaseAndNavigatetoCDP(CaseId);
 		}
 		catch(Exception E) {
 			E.printStackTrace();
 		}
 	}
+	public static boolean ValidTogglebtn;
+	public static boolean InValidToggle;
+	public static int selectNotice;
+	public static int noticeIssuedte;
+	public static String certifiedMailNo;
+	  public static By invalidToogelbtn = By.xpath("//button[text()='Invalid']");
+	   public static By noNoticeBtn = By.xpath("//button[text()='No Notice']");
+	   public static By CompleteInspectiontBtn = By.xpath("//div[@class='progressive-form__footer']//button[text()='Complete Inspection']");
+	   public static By NewNoticeBtn = By.xpath("//button[text()='New Notice']");
+	   public static By queueToPrint = By.xpath("//div[@class='case-inspection__print-notice']//button[text()='Queue To Print']");
+	   public static By selectNoticelbl = By.xpath("//label[@title='Select a notice']");
+	   public static By noticeIssueDatelbl = By.xpath("//label[@title='Notice issue date']");
+	
+	public  void PerformInspection_VerifyCreatAndPerformInspection() throws InterruptedException{
+		CEcommonMethod.createCaseAndPerformInspection();
+		WaitUntilVisible(validTogglebtn);
+		ValidTogglebtn = findElement(validTogglebtn).isDisplayed();
+		ClickOn(invalidToogelbtn);
+		InValidToggle = findElement(By.xpath("//button[text()='Invalid'][@class='square-btn btn btn-info']")).isDisplayed();
+	    ClickOn(By.xpath("//button[text()='Valid'][@class='square-btn btn btn-default']"));
+		WaitForElementInteractable(ContinueBtnFollowUp);
+		ClickOn(ContinueBtnFollowUp);
+		WaitUntilVisible(noNoticeBtn);
+		WaitUntilVisible(By.xpath(continueBtnFollowUp2));
+		ClickByJsExecuter(noNoticeBtn);
+		selectNotice = driver.findElements(selectNoticelbl).size();
+		noticeIssuedte = driver.findElements(noticeIssueDatelbl).size();
+		WaitUntilVisible(CompleteInspectiontBtn);
+		CEcommonMethod.selectUserScheduleFollowUpInspection("two");
+		WaitUntilVisible(CompleteInspectiontBtn);
+		ScrollIntoView(NewNoticeBtn);
+		ClickByJsExecuter(NewNoticeBtn);
+		WaitUntilVisible(By.xpath(continueBtnFollowUp2));
+		WaitForElementInteractable(By.xpath("(//div[@class='notice-list row'])[2]//div[@class='multi-choice-buttons']//button[not(contains(text(),'Non-HTML'))]"));
+
+		int htmlSizebtn = driver.findElements(By.xpath("(//div[@class='notice-list row'])[2]//div[@class='multi-choice-buttons']//button[not(contains(text(),'Non-HTML'))]")).size();
+
+		if (htmlSizebtn > 0) {
+			ClickByJsExecuter(By.xpath("(//div[@class='notice-list row'])[2]//div[@class='multi-choice-buttons']//button[not(contains(text(),'Non-HTML'))]"));
+		} else {
+
+			List<WebElement> AllNotices = WaitUntilVisibleList(SelectANotice);
+			int CountNotices = AllNotices.size();
+			for (int i = 0; i < CountNotices; i++) {
+				WebElement ListSeq = AllNotices.get(i);
+				String[] NoticeType = ListSeq.getText().split(" ");
+				if (NoticeType[0].equalsIgnoreCase("HTML")) {
+					ListSeq.click();
+					break;
+				}
+			}
+		}
+
+		WaitForElementInteractable(ContinueBtnFollowUp2);
+		ClickOn(ContinueBtnFollowUp2);
+
+		forcedWaitTime(4);
+		WaitUntilVisible(GenerateNoticeBtn);
+		ClickOn(GenerateNoticeBtn);
+
+		WaitForElementInteractable(queueToPrint);
+		ClickOn(queueToPrint);
+		WaitForElementInteractable(By.xpath(issueNoticeButton));
+		ClickOn(By.xpath(issueNoticeButton));
+
+		WaitUntilVisible(YesConfirmation);
+		WaitForElementInteractable(YesConfirmation);
+		ClickOn(YesConfirmation);
+
+		WaitForCurserRunning(10);
+		WaitUntilVisible(FollowUpInspectionSection);
+		driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(2));
+		WebElement FollowUp2Title = WaitUntilVisibleWE(FollowUpInspectionSection);
+		if (!(FollowUp2Title.isDisplayed())) {
+
+			SoftAssert s120 = new SoftAssert();
+			s120.assertEquals(false, true);
+			s120.assertAll();
+
+		}
+	}
+
+	
 
 	public void CCP_CDP_EditLocation() throws InterruptedException {
 
@@ -398,24 +491,24 @@ public class PerformInspectionUtility extends Helper {
 
 	public void PerformInspection_AddAViolation() throws InterruptedException {
 
-		List<WebElement> VioList = WaitUntilVisibleList(CaseVioList);
-		int BeforeAdding = VioList.size();
-		WaitForElementInteractable(AddVioPI);
-		SendKeys(AddVioPI, "Wa");
-		WaitForElementInteractable(SelectVioList);
-		ClickOn(SelectVioList);
-		WaitForCurserRunning(5);
-		WaitforCustometime(2);
-		WaitUntilVisible(CaseVioList);
-		List<WebElement> VioList2 = WaitUntilVisibleList(CaseVioList);
-		int AfterAdding = VioList2.size();
-		if ((AfterAdding == (BeforeAdding + 1)) == false) {
+        List<WebElement> VioList = WaitUntilVisibleList(CaseVioList);
+        int BeforeAdding = VioList.size();
+        System.out.println("Before adding "+BeforeAdding);
+        WaitForElementInteractable(AddVioPI);
+        SendKeys(AddVioPI, "waterd");
+        WaitForElementInteractable(SelectVioList);
+        ClickOn(SelectVioList);
+        WaitForCurserRunning(5);
+        WaitforCustometime(2);
+        WaitUntilVisible(CaseVioList);
+        List<WebElement> VioList2 = WaitUntilVisibleList(CaseVioList);
+        int AfterAdding = VioList2.size();
+        System.out.println("After adding "+AfterAdding);
 
-			SoftAssert s68 = new SoftAssert();
-			s68.assertEquals(false, true);
-			s68.assertAll();
-
-		}
+        
+        SoftAssert s68 = new SoftAssert();
+        s68.assertEquals(AfterAdding, BeforeAdding + 1, "Violation After Adding " + AfterAdding + "  must be 1 greater than before Adding. " + BeforeAdding);
+        s68.assertAll();
 	}
 
 	public void PerformInspection_VerifyVerificationPendingStatusForViolation() {
@@ -641,7 +734,7 @@ public class PerformInspectionUtility extends Helper {
 
 	public void PerformInspection_ExpandSection2OnContinue() {
 
-		try {
+		
 			WaitForElementInteractable(ContinueBtn);
 			ClickOn(ContinueBtn);
 			WebElement CompleteInsBtn = WaitUntilVisibleWE(IssueNoticeBtn);
@@ -651,10 +744,10 @@ public class PerformInspectionUtility extends Helper {
 				s83.assertAll();
 
 			}
-		} catch (WebDriverException e) {
-			e.printStackTrace();
+		 
+			
 
-		}
+		
 	}
 
 	public void PerformInspection_VerifySection1Label() {
@@ -670,57 +763,58 @@ public class PerformInspectionUtility extends Helper {
 
 	public void PerformInspection_EditVerifyViolationSection() {
 
-		try {
-			WaitUntilPresent(EditVerifyVio);
-			WaitForElementInteractable(EditVerifyVio);
-			ClickByJsExecuter(EditVerifyVio);
-			WaitUntilVisible(EditVioIcon);
-			WaitForElementInteractable(EditVioIcon);
-			ClickByJsExecuter(EditVioIcon);
-			String[] EditVioTitle = GetText(EditVioPopup).split(" ");
-			SoftAssert s85 = new SoftAssert();
-			s85.assertEquals(EditVioTitle[0], "Edit");
-			s85.assertAll();
-			WaitForElementInteractable(CancelEditAnimal);
-			ClickByJsExecuter(CancelEditAnimal);
-			WaitUntilVisible(ContinueBtn);
-			ScrollIntoView(ContinueBtn);
-			WaitUntilPresent(ContinueBtn);
-			WaitForElementInteractable(ContinueBtn);
-			ClickByJsExecuter(ContinueBtn);
-		} catch (WebDriverException e) {
-			e.printStackTrace();
+		WaitUntilPresent(EditVerifyVio);
+        WaitForElementInteractable(EditVerifyVio);
+        ClickByJsExecuter(EditVerifyVio);
+        
+        addViolationOnVeriftViolation1_Animal();
+        
+        WaitUntilVisible(EditVioIcon);
+        WaitForElementInteractable(EditVioIcon);
+        ClickByJsExecuter(EditVioIcon);
+        WaitUntilVisible(EditVioPopup);
+        String[] EditVioTitle = GetText(EditVioPopup).split(" ");
+        SoftAssert s85 = new SoftAssert();
+        s85.assertEquals(EditVioTitle[0], "Edit");
+        s85.assertAll();
+        WaitForElementInteractable(CancelEditAnimal);
+        ClickByJsExecuter(CancelEditAnimal);
+        ClickByJsExecuter(By.xpath("(//button[text()='Valid'])[3]"));
+        WaitUntilVisible(ContinueBtn);
+        ScrollIntoView(ContinueBtn);
+        WaitUntilPresent(ContinueBtn);
+        WaitForElementInteractable(ContinueBtn);
+        ClickByJsExecuter(ContinueBtn);
 
-		}
 	}
 
 	public void PerformInspection_VerifyFirstNoticeState() throws InterruptedException {
 
-		WaitForCurserRunning(5);
-		WaitforCustometime(2);
-		WaitUntilVisible(NoticeSelected2);
-		WaitUntilPresent(NoticeSelected2);
-		WebElement Notice = findElement(NoticeSelected2);
-		if ((Notice.isEnabled()) == false) {
+		 WaitForCurserRunning(5);
+	        WaitforCustometime(2);
+	        WaitUntilVisible(NoticeSelected2);
+	        WaitUntilPresent(NoticeSelected2);
+	        WebElement Notice = findElement(NoticeSelected2);
+	        if ((Notice.isEnabled()) == false) {
 
-			SoftAssert s86 = new SoftAssert();
-			s86.assertEquals(false, true);
-			s86.assertAll();
-		}
+	            SoftAssert s86 = new SoftAssert();
+	            s86.assertEquals(false, true);
+	            s86.assertAll();
+	        }
 	}
 
 	public void PerformInspection_SelectAnyNotice() throws InterruptedException {
 
-		WaitUntilVisible(Notice2);
-		WaitForElementInteractable(Notice2);
-		ClickByJsExecuter(Notice2);
-		WaitforCustometime(1);
-		WebElement Notice02 = WaitUntilVisibleWE(Notice2);
-		if ((Notice02.isEnabled()) == false) {
-			SoftAssert s87 = new SoftAssert();
-			s87.assertEquals(false, true);
-			s87.assertAll();
-		}
+		 WaitUntilVisible(Notice2);
+	        WaitForElementInteractable(Notice2);
+	        ClickByJsExecuter(Notice2);
+	        WaitforCustometime(1);
+	        WebElement Notice02 = WaitUntilVisibleWE(Notice2);
+	        if ((Notice02.isEnabled()) == false) {
+	            SoftAssert s87 = new SoftAssert();
+	            s87.assertEquals(false, true);
+	            s87.assertAll();
+	        }
 
 	}
 
@@ -753,31 +847,32 @@ public class PerformInspectionUtility extends Helper {
 
 	public void PerformInspection_SelectNoNoticeRequiredCheckbox() throws InterruptedException {
 
-		WebElement NoNoticeToggle = WaitUntilVisibleWE(NoNoticeToggleButton);
-		NoNoticeToggle.click();
-		WaitforCustometime(2);
-		if ((NoNoticeToggle.isEnabled()) == false) {
-			SoftAssert s89 = new SoftAssert();
-			s89.assertEquals(false, true);
-			s89.assertAll();
-		}
+		  WebElement NoNoticeToggle = WaitUntilVisibleWE(NoNoticeToggleButton);
+	        NoNoticeToggle.click();
+	        WaitforCustometime(2);
+	        if ((NoNoticeToggle.isEnabled()) == false) {
+	            SoftAssert s89 = new SoftAssert();
+	            s89.assertEquals(false, true);
+	            s89.assertAll();
+	        }
+
 
 	}
 
 	public void PerformInspection_UpdateNoticeIssueDate() throws InterruptedException {
 
-		WaitForElementInteractable(By.xpath("//button[text()='New Notice']"));
-		ClickOn(By.xpath("//button[text()='New Notice']"));
-		WaitForElementInteractable(NoticeIssueDate);
-		WebElement CurDate = WaitUntilVisibleWE(NoticeIssueDate);
-		String CurrentDate = CurDate.getAttribute("value");
-		ClickOn(NoticeIssueDate);
-		ClickOn(NoticeDatePicker);
-		WebElement UpdDate = WaitUntilVisibleWE(NoticeIssueDate);
-		String UpdatedDate = UpdDate.getAttribute("value");
-		SoftAssert s90 = new SoftAssert();
-		s90.assertNotEquals(CurrentDate, UpdatedDate);
-		s90.assertAll();
+		 WaitForElementInteractable(By.xpath("//button[text()='New Notice']"));
+	        ClickOn(By.xpath("//button[text()='New Notice']"));
+	        WaitForElementInteractable(NoticeIssueDate);
+	        WebElement CurDate = WaitUntilVisibleWE(NoticeIssueDate);
+	        String CurrentDate = CurDate.getAttribute("value");
+	        ClickOn(NoticeIssueDate);
+	        ClickOn(NoticeDatePicker);
+	        WebElement UpdDate = WaitUntilVisibleWE(NoticeIssueDate);
+	        String UpdatedDate = UpdDate.getAttribute("value");
+	        SoftAssert s90 = new SoftAssert();
+	        s90.assertNotEquals(CurrentDate, UpdatedDate);
+	        s90.assertAll();
 
 	}
 
@@ -811,24 +906,25 @@ public class PerformInspectionUtility extends Helper {
 
 	public void PerformInspection_VerifyContinueButtonPresenceOnHtmlSelected() {
 
-		List<WebElement> AllNotices = WaitUntilVisibleList(NoticeSelected);
-		int CountNotices = AllNotices.size();
-		for (int i = 0; i < CountNotices; i++) {
-			WebElement ListSeq = AllNotices.get(i);
-			String[] NoticeType = ListSeq.getText().split(" ");
-			if (NoticeType[0].equalsIgnoreCase("HTML")) {
-				ListSeq.click();
-				break;
-			}
-		}
-		WebElement ContinueBtn2 = WaitUntilVisibleWE(ContinueBtnSec2);
-		if ((ContinueBtn2.isDisplayed()) == false) {
+		 List<WebElement> AllNotices = WaitUntilVisibleList(NoticeSelected);
+	        int CountNotices = AllNotices.size();
+	        for (int i = 0; i < CountNotices; i++) {
+	            WebElement ListSeq = AllNotices.get(i);
+	            String[] NoticeType = ListSeq.getText().split(" ");
+	            if (NoticeType[0].equalsIgnoreCase("HTML")) {
+	                ListSeq.click();
+	                break;
+	        }
+	        WebElement ContinueBtn2 = WaitUntilVisibleWE(ContinueBtnSec2);
+	        if ((ContinueBtn2.isDisplayed()) == false) {
 
-			SoftAssert s92 = new SoftAssert();
-			s92.assertEquals(false, true);
-			s92.assertAll();
-		}
+	            SoftAssert s92 = new SoftAssert();
+	            s92.assertEquals(false, true);
+	            s92.assertAll();
+	        }
 
+
+	}
 	}
 
 	public void PerformInspection_VerifyViolationsUnderReviewOpenViolations() {
@@ -1408,7 +1504,7 @@ public class PerformInspectionUtility extends Helper {
 	}
 
 	public void CDP_VerifyOpenAddCaseNotePopup() {
-		try {
+		
 
 			WaitUntilVisible(CaseNotesIcon);
 			WaitForElementInteractable(CaseNotesIcon);
@@ -1418,10 +1514,7 @@ public class PerformInspectionUtility extends Helper {
 			WaitUntilVisible(CaseNotePopupValidate);
 			String PopupOpens = GetText(CaseNotePopupValidate);
 			Assert.assertEquals(PopupOpens, "Add Case Note");
-		} catch (WebDriverException e) {
-			e.printStackTrace();
-
-		}
+		
 	}
 
 	public void CDP_VerifyPopopClosesOnclickingCancel() {
@@ -1454,8 +1547,8 @@ public class PerformInspectionUtility extends Helper {
 
 			WaitForCurserRunning(3);
 			WaitUntilVisible(ValidationMessage);
-			String ValMsg5000 = GetText(ValidationMessage);
-			Assert.assertEquals(ValMsg5000, "The Case note is required.");
+			String ValMsg5000 = getTextByJSExecutor(ValidationMessage);
+			Assert.assertEquals(ValMsg5000, "The Internal comment is required.");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 
@@ -1464,15 +1557,24 @@ public class PerformInspectionUtility extends Helper {
 
 	public void CDP_validationMsgForMoreThan5000Characters() {
 
-		String TextMoreThan5000 = RandomStrings.RequiredString(5001);
-		WaitforCustometime(5);
-		WaitForElementInteractable(NoteTextArea);
-		SendKeys(NoteTextArea, TextMoreThan5000);
-		ClickOn(CreateNoteButton);
-
-		WaitUntilVisible(ValidationMessage);
-		String ValMsg5000 = GetText(ValidationMessage);
-		Assert.assertEquals(ValMsg5000, "5000 character limit.");
+String char2500="Lorem pom ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut eros et nisl sagittis vestibulum. Nullam nulla eros, ultricies sit amet, nonummy id, imperdiet feugiat, pede. Sed lectus. Donec mollis hendrerit risus. Phasellus nec sem in justo pellentesque facilisis. Etiam imperdiet imperdiet orci. Nunc nec neque. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet, leo. Maecenas malesuada. Praesent congue erat at massa..";
+        
+        driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(4));
+        WaitUntilVisible(NoticePopupCancel);
+        WaitUntilPresent(NoticePopupCancel);
+        WaitForElementInteractable(NoticePopupCancel);
+        ClickByJsExecuter(NoticePopupCancel);
+        WaitUntilElementInvisible(NoticePopupCancel);
+        ClickOn(CaseNotesIcon);
+        WaitForElementInteractable(NoteTextArea);
+        SendKeys(NoteTextArea,char2500);
+        SendKeys(NoteTextArea,char2500);
+        WaitForElementInteractable(CreateNoteButton);
+        ClickByJsExecuter(CreateNoteButton);
+        moveToWebElementAndClick(CreateNoteButton);
+        WaitUntilVisible(Notes5000valMsg);
+        String ValMsg5000 = getTextByJSExecutor(Notes5000valMsg);
+        Assert.assertEquals(ValMsg5000, "5000 character limit.");
 
 	}
 
@@ -1489,8 +1591,21 @@ public class PerformInspectionUtility extends Helper {
 		ClickOn(CreateNoteButton);
 		WaitForCurserRunning(4);
 		String[] NotesTitle = GetText(CreatedNotesTitle).split(" ");
-		Assert.assertEquals(NotesTitle[0], "Notes");
+		Assert.assertEquals(NotesTitle[0], "Internal");
+		
+		
+		
 
+	}
+	public void addViolationOnVeriftViolation1_Animal()
+	{
+		WaitForElementInteractable(AddVioPI);
+		SendKeys(AddVioPI, "Animal");
+		ClickByJsExecuter(selectViolAnimalFromDropdown);
+		SendKeys(animalColourBox, "Black");
+		ClickOn(addBtn_For_EntitiyViolation);
+		
+	
 	}
 
 }

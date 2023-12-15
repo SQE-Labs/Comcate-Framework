@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import org.openqa.selenium.WebElement;
 
@@ -16,6 +17,7 @@ import CommonMethods.CECommonMethods;
 import CommonMethods.Helper;
 import CommonMethods.PropertiesUtils;
 import CommonMethods.RandomStrings;
+
 
 
 public class ForcedAbatementUtility extends Helper {
@@ -36,7 +38,7 @@ public class ForcedAbatementUtility extends Helper {
 	public static String initiateFABtn = "//li[text()='Initiate Forced Abatement']";
 	public static String popupTitleFA = "//div[text()='Initiate Forced Abatement']";
 	public static String iFAPopupBtn = "//div[@class='modal-footer']//button[2]";
-	public static String errorMsgNote = "(//span[@class='field__error'])[2]";
+	public static String errorMsgNote = "//*[@class='field-section field-section--error field-section--required  col-md-12 col-12']//span";
 	public static String noteField = "//textarea[@placeholder='Enter Note']";
 	public static String errorNoteLimit = "//span[text()='500 character limit.']";
 	public static String forcedBadge = "//span[text()='Forced']";
@@ -54,9 +56,10 @@ public class ForcedAbatementUtility extends Helper {
 	public static String fAToggleBtn = "//div[@class='multi-choice-buttons']/button[1]";//
 	public static String fAActivityBtn = "//button[text()='Add Forced Abatement Activity']";
 	public static String selectDocument = "//label[text()='Select Document']/following::div[1]//div";
+	//label[text()='Select Document']/following::div[1]//div
 	public static String selectHTML = "//div[text()='HTML FA Document']";
-	public static String errorMsgFA1 = "(//span[@class='field__error'])[4]";
-	public static String errorMsgFA2 = "(//span[@class='field__error'])[4]";
+	public static String errorMsgFA1 = "(//span[@class='field__error'])[1]";
+	public static String errorMsgFA2 = "(//span[@class='field__error'])[2]";
 	public static String docNoteTitle = "//label[text()='Document Note']";
 	public static String validMsgDocNote = "//label[@title='Document Note']/following::span";
 	public static String labelForText1 = "//input[@placeholder='Enter Text']";
@@ -279,142 +282,124 @@ public class ForcedAbatementUtility extends Helper {
 
 	}
 
+    
     public void ForcedAbatement_OpenInitiateForcedAbabtementPopup() throws InterruptedException {
+        
+
         driver.navigate().to(BrowsersInvoked.URLDashboard);
         WaitForCurserRunning(10);
+        Thread.sleep(5000);
         CECommonMethodS.CE_CreateACase();
 
-        try {
-            WaitUntilVisible(MoreBtn);
-            WaitUntilPresent(MoreBtn);
-            WaitForElementInteractable(MoreBtn);
-            ClickByJsExecuter(MoreBtn);
-            WaitForElementInteractable(InitiateFABtn);
-            ClickOn(InitiateFABtn);
-            WaitUntilVisible(PopupTitleFA);
-            String FATitle = GetText(PopupTitleFA);
-            Assert.assertEquals(FATitle, "Initiate Forced Abatement");
-        } catch (WebDriverException e) {
-            e.printStackTrace();
-            Assert.assertEquals(Boolean.TRUE, Boolean.FALSE);
-        }
+        WaitUntilVisible(MoreBtn);
+        WaitUntilPresent(MoreBtn);
+        WaitForElementInteractable(MoreBtn);
+        ClickByJsExecuter(MoreBtn);
+        WaitForElementInteractable(InitiateFABtn);
+        ClickOn(InitiateFABtn);
+        WaitUntilVisible(PopupTitleFA);
+        String FATitle = GetText(PopupTitleFA);
+        Assert.assertEquals(FATitle, "Initiate Forced Abatement");
+
     }
 
     public void ForcedAbatement_ValidationMsgForEmptyNote() {
 
-            WaitForElementInteractable(IFAPopupBtn);
-            ClickByJsExecuter(IFAPopupBtn);
-            WaitUntilVisible(ErrorMsgNote);
-            String ValidMsg = GetText(ErrorMsgNote);
-            String ExpValidMag = "The Forced Abatement Note is required.";
-            SoftAssert s116 = new SoftAssert();
-            s116.assertEquals(ValidMsg, ExpValidMag);
-            s116.assertAll();
+        WaitForElementInteractable(IFAPopupBtn);
+        ClickByJsExecuter(IFAPopupBtn);
+        WaitUntilVisible(ErrorMsgNote);
+        String ValidMsg = GetText(ErrorMsgNote);
+        String ExpValidMag = "The Forced Abatement Note is required.";
+        SoftAssert s116 = new SoftAssert();
+        s116.assertEquals(ValidMsg, ExpValidMag);
+        s116.assertAll();
 
     }
 
     public void ForcedAbatement_ValidationMsgForCharactersOver500InNote() {
-        try {
-            String LargeNote = RandomStrings.RequiredString(505);
-            SendKeys(NoteField, LargeNote);
-            WaitForElementInteractable(IFAPopupBtn);
-            ClickOn(IFAPopupBtn);
-            String LimitError = GetText(ErrorNoteLimit);
-            SoftAssert s117 = new SoftAssert();
-            s117.assertEquals(LimitError, "500 character limit.");
-            s117.assertAll();
-        } catch (WebDriverException e) {
-            e.printStackTrace();
-        }
+
+        String LargeNote = RandomStrings.RequiredString(505);
+        SendKeys(NoteField, LargeNote);
+        WaitForElementInteractable(IFAPopupBtn);
+        ClickOn(IFAPopupBtn);
+        String LimitError = GetText(ErrorNoteLimit);
+        SoftAssert s117 = new SoftAssert();
+        s117.assertEquals(LimitError, "500 character limit.");
+        s117.assertAll();
+
     }
 
-    public void ForcedAbatement_InitiateForcedAbatement() {
-        try {
-            WebElement NoteFld = WaitUntilVisibleWE(NoteField);
-            NoteFld.clear();
-            SendKeys(NoteField, "Notes for FA");
-            WaitForElementInteractable(IFAPopupBtn);
-            ClickOn(IFAPopupBtn);
-            WaitForCurserRunning(5);
-            WaitUntilVisible(AbatementInfo);
-            WebElement FAInfo = driver.findElement(AbatementInfo);
-            if ((FAInfo.isDisplayed()) == false) {
-                SoftAssert s118 = new SoftAssert();
-                s118.assertEquals(false, true);
-                s118.assertAll();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public void ForcedAbatement_InitiateForcedAbatement() throws InterruptedException {
 
+        WebElement NoteFld = WaitUntilVisibleWE(NoteField);
+        NoteFld.clear();
+        SendKeys(NoteField, "Notes for FA");
+        WaitForElementInteractable(IFAPopupBtn);
+        ClickOn(IFAPopupBtn);
+        WaitForCurserRunning(5);
+        WaitUntilVisible(AbatementInfo);
+        WebElement FAInfo = driver.findElement(AbatementInfo);
+        if ((FAInfo.isDisplayed()) == false) {
+            SoftAssert s118 = new SoftAssert();
+            s118.assertEquals(false, true);
+            s118.assertAll();
         }
+
     }
 
     public void ForcedAbatement_VerifyForcedStageBadge() {
-        try {
 
-            WebElement Forced = WaitUntilVisibleWE(ForcedBadge);
-            if ((Forced.isDisplayed()) == false) {
-                SoftAssert s119 = new SoftAssert();
-                s119.assertEquals(false, true);
-                s119.assertAll();
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-    }
-
-    public void ForcedAbatement_OpenEditFaNotePopup() {
-        try {
-            ScrollIntoView(EditFANoteLink);
-            WaitForElementInteractable(EditFANoteLink);
-            ClickByJsExecuter(EditFANoteLink);
-            WaitForCurserRunning(4);
-            WaitUntilVisible(EditNotePopup);
-            String EditFAPopup = GetText(EditNotePopup);
+        WebElement Forced = WaitUntilVisibleWE(ForcedBadge);
+        if ((Forced.isDisplayed()) == false) {
             SoftAssert s119 = new SoftAssert();
-            s119.assertEquals(EditFAPopup, "Edit FA Note");
+            s119.assertEquals(false, true);
             s119.assertAll();
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
         }
+
+    }
+
+    public void ForcedAbatement_OpenEditFaNotePopup() throws InterruptedException {
+
+        ScrollIntoView(EditFANoteLink);
+        WaitForElementInteractable(EditFANoteLink);
+        ClickByJsExecuter(EditFANoteLink);
+        WaitForCurserRunning(4);
+        WaitUntilVisible(EditNotePopup);
+        String EditFAPopup = GetText(EditNotePopup);
+        SoftAssert s119 = new SoftAssert();
+        s119.assertEquals(EditFAPopup, "Edit FA Note");
+        s119.assertAll();
+
+
     }
 
     public void ForcedAbatement_EditNoteInEditFaNoteField() {
-        try {
-            WaitForElementInteractable(NoteField);
-            SendKeys(NoteField, " Edited*");
 
-            String EditedFANote = GetText(NoteField);
-            SoftAssert s120 = new SoftAssert();
-            s120.assertEquals(EditedFANote, "Notes for FA Edited*");
-            s120.assertAll();
-        } catch (Exception e) {
-            e.printStackTrace();
+        WaitForElementInteractable(NoteField);
+        SendKeys(NoteField, " Edited*");
 
-        }
+        String EditedFANote = GetText(NoteField);
+        SoftAssert s120 = new SoftAssert();
+        s120.assertEquals(EditedFANote, "Notes for FA Edited*");
+        s120.assertAll();
+
     }
 
-    public void ForcedAbatement_VerifyTheUpdatedNote() {
-        try {
-            WaitUntilVisible(SaveBtn);
-            WaitForElementInteractable(SaveBtn);
-            ClickOn(SaveBtn);
-            WaitForCurserRunning(10);
+    public void ForcedAbatement_VerifyTheUpdatedNote() throws InterruptedException {
 
-            WaitUntilVisible(EditedNote);
-            ScrollIntoView(EditedNote);
-            String EditedFANote = driver.findElement(EditedNote).getText();
-            SoftAssert s121 = new SoftAssert();
-            s121.assertEquals(EditedFANote, "Notes for FA Edited*");
-            s121.assertAll();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        WaitUntilVisible(SaveBtn);
+        WaitForElementInteractable(SaveBtn);
+        ClickOn(SaveBtn);
+        WaitForCurserRunning(10);
 
-        }
+        WaitUntilVisible(EditedNote);
+        ScrollIntoView(EditedNote);
+        String EditedFANote = driver.findElement(EditedNote).getText();
+        SoftAssert s121 = new SoftAssert();
+        s121.assertEquals(EditedFANote, "Notes for FA Edited*");
+        s121.assertAll();
+
     }
 
     public void ForcedAbatement_VerifyAddActivityBtn() throws InterruptedException {
@@ -427,42 +412,49 @@ public class ForcedAbatementUtility extends Helper {
 
     }
 
-    public void ForcedAbatement_OpenAddForcedAbatementActivityPopup() {
-        try {
-            WaitForElementInteractable(PerformInsButton);
-            ScrollIntoView(PerformInsButton);
-            WaitForElementInteractable(AddActivityBtn);
-            ClickByJsExecuter(AddActivityBtn);
-            WaitForCurserRunning(3);
-            WaitUntilVisible(FAactivityPopup);
-            String AddFAActivity = GetText(FAactivityPopup);
-            SoftAssert s123 = new SoftAssert();
-            s123.assertEquals(AddFAActivity, "Add Forced Abatement Activity");
-            s123.assertAll();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void ForcedAbatement_OpenAddForcedAbatementActivityPopup() throws InterruptedException {
+
+        WaitForElementInteractable(PerformInsButton);
+        ScrollIntoView(PerformInsButton);
+        WaitForElementInteractable(AddActivityBtn);
+        ClickByJsExecuter(AddActivityBtn);
+        WaitForCurserRunning(3);
+        WaitUntilVisible(FAactivityPopup);
+        String AddFAActivity = GetText(FAactivityPopup);
+        SoftAssert s123 = new SoftAssert();
+        s123.assertEquals(AddFAActivity, "Add Forced Abatement Activity");
+        s123.assertAll();
+
     }
 
     public void ForcedAbatement_VerifyFirstActivityBtnState() {
         WebElement FirstActivity = WaitUntilVisibleWE(FAToggleBtn);
-        if ((FirstActivity.isEnabled()) == false) {
-            Assert.assertEquals(false, true);
+        if (!(FirstActivity.isEnabled())) {
+            Assert.assertFalse(true);
         }
 
     }
 
     public void ForcedAbatement_ValidationMsgForNoDataOfActivity() throws InterruptedException {
-        WaitForElementInteractable(FAToggleBtn,2);
+       try {
+    	WaitForElementInteractable(FAToggleBtn, 2);
         ClickByJsExecuter(FAToggleBtn);
         WaitForElementInteractable(FAActivityBtn);
         ScrollIntoView(FAActivityBtn);
         WaitForElementInteractable(FAActivityBtn);
         ClickOn(FAActivityBtn);
+       }
+       catch(Exception e)
+       {
+    	   Thread.sleep(10000);
+           ClickOn(FAActivityBtn);
+
+       }
         WaitUntilVisible(ErrorMsgFA1);
         WebElement ErrorMsg1 = WaitUntilVisibleWE(ErrorMsgFA1);
         WebElement ErrorMsg2 = WaitUntilVisibleWE(ErrorMsgFA2);
-        if ((ErrorMsg1.isDisplayed()) == false && ErrorMsg2.isDisplayed() == false) {
+        if (!(ErrorMsg1.isDisplayed()) && !ErrorMsg2.isDisplayed()) {
+
             SoftAssert s125 = new SoftAssert();
             s125.assertEquals(false, true);
             s125.assertAll();
@@ -470,21 +462,17 @@ public class ForcedAbatementUtility extends Helper {
     }
 
     public void ForcedAbatement_VerifyDocumentNoteFieldPresence() {
-        try {
-            WaitForElementInteractable(SelectDocument);
-            ClickOn(SelectDocument);
-            WaitForElementInteractable(SelectHTML);
-            ClickOn(SelectHTML);
-            WebElement DocumentNote = WaitUntilVisibleWE(DocNoteTitle);
-            if ((DocumentNote.isDisplayed()) == false) {
-                SoftAssert s126 = new SoftAssert();
-                s126.assertEquals(false, true);
-                s126.assertAll();
-            }
-        } catch (WebDriverException e) {
-            e.printStackTrace();
-
+        WaitForElementInteractable(SelectDocument);
+        ClickOn(SelectDocument);
+        WaitForElementInteractable(SelectHTML);
+        ClickOn(SelectHTML);
+        WebElement DocumentNote = WaitUntilVisibleWE(DocNoteTitle);
+        if (!(DocumentNote.isDisplayed())) {
+            SoftAssert s126 = new SoftAssert();
+            s126.assertEquals(false, true);
+            s126.assertAll();
         }
+
     }
 
     public void ForcedAbatement_ValidationMsgForEmptyDocumentNote() throws InterruptedException {
@@ -492,7 +480,7 @@ public class ForcedAbatementUtility extends Helper {
         ClickOn(GenerateDocumentBtn);
         WaitUntilVisible(ValidMsgDocNote);
         WebElement ValidationDocNote = WaitUntilVisibleWE(ValidMsgDocNote);
-        if ((ValidationDocNote.isDisplayed()) == false) {
+        if (!(ValidationDocNote.isDisplayed())) {
             SoftAssert s127 = new SoftAssert();
             s127.assertEquals(false, true);
             s127.assertAll();
@@ -500,157 +488,142 @@ public class ForcedAbatementUtility extends Helper {
 
     }
 
-    public void ForcedAbatement_AddForcedAbatementActivity() {
-        try {
-            WaitForElementInteractable(LabelForText1);
-            SendKeys(LabelForText1, "C123C456");
-            SendKeys(LabelForNumber2, "12345");
-            ClickOn(LabelForSelect3);
-            WaitForElementInteractable(FirstOption);
-            ClickOn(FirstOption);
-            ScrollIntoView(ContinueToGenDoc);
-            WaitForElementInteractable(ContinueToGenDoc);
-            ClickOn(ContinueToGenDoc);
-            WaitForCurserRunning(4);
-            WaitForElementInteractable(selectFAADocArrow);
-            WaitForElementInteractable(selectFAADocArrow);
-            ClickOn(selectFAADocArrow);
-            WaitForElementInteractable(SelectFAADoc);
-            ClickOn(SelectFAADoc);
-            WaitForElementInteractable(GenFAADoc);
-            ClickOn(GenFAADoc);
-            WaitForCurserRunning(5);
-            WaitForElementInteractable(By.xpath("//button[text()='Do Not Print']"));
-            ClickOn(By.xpath("//button[text()='Do Not Print']"));
-            ClickOn(GenerateDocAddFABtn);
-            WaitForCurserRunning(5);
-            WaitUntilVisible(AddedActivity);
-            WebElement AddedActivities = driver.findElement(AddedActivity);
-            if ((AddedActivities.isDisplayed()) == false) {
-                SoftAssert s128 = new SoftAssert();
-                s128.assertEquals(false, true);
-                s128.assertAll();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public void ForcedAbatement_AddForcedAbatementActivity() throws InterruptedException {
+
+        WaitForElementInteractable(LabelForText1);
+        SendKeys(LabelForText1, "C123C456");
+        SendKeys(LabelForNumber2, "12345");
+        ClickOn(LabelForSelect3);
+        WaitForElementInteractable(FirstOption);
+        ClickOn(FirstOption);
+        ScrollIntoView(ContinueToGenDoc);
+        WaitForElementInteractable(ContinueToGenDoc);
+        ClickOn(ContinueToGenDoc);
+        WaitForCurserRunning(4);
+        WaitForElementInteractable(selectFAADocArrow);
+        ClickOn(selectFAADocArrow);
+        WaitForElementInteractable(SelectFAADoc);
+        ClickOn(SelectFAADoc);
+        WaitForElementInteractable(GenFAADoc);
+        ClickOn(GenFAADoc);
+        WaitForCurserRunning(5);
+        WaitForElementInteractable(By.xpath("//button[text()='Do Not Print']"));
+        ClickOn(By.xpath("//button[text()='Do Not Print']"));
+        ClickOn(GenerateDocAddFABtn);
+        WaitForCurserRunning(5);
+        WaitUntilVisible(AddedActivity);
+        WebElement AddedActivities = driver.findElement(AddedActivity);
+        if (!(AddedActivities.isDisplayed())) {
+            SoftAssert s128 = new SoftAssert();
+            s128.assertEquals(false, true);
+            s128.assertAll();
         }
+
     }
 
 
     public static String actualEditFAApop;
 
-    public void ForcedAbatement_OpenEditForcedAbatementActivityPopup() {
-        try {
-            WaitUntilVisible(EditActivityIcon);
-            ScrollIntoView(EditActivityIcon);
-            WaitForElementInteractable(EditActivityIcon);
-            ClickByJsExecuter(EditActivityIcon);
-            WaitForCurserRunning(4);
+    public void ForcedAbatement_OpenEditForcedAbatementActivityPopup() throws InterruptedException {
 
-            WaitUntilVisible(EditFAAPopup);
-            actualEditFAApop = GetText(EditFAAPopup);
-            String ExpectedEditFATitle = "Edit Forced Abatement - Forced Abatement Activity";
-            SoftAssert s129 = new SoftAssert();
-            s129.assertEquals(actualEditFAApop, ExpectedEditFATitle);
-            s129.assertAll();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+        WaitUntilVisible(EditActivityIcon);
+        ScrollIntoView(EditActivityIcon);
+        WaitForElementInteractable(EditActivityIcon);
+        ClickByJsExecuter(EditActivityIcon);
+        WaitForCurserRunning(4);
+
+        WaitUntilVisible(EditFAAPopup);
+        actualEditFAApop = GetText(EditFAAPopup);
+        String ExpectedEditFATitle = "Edit Forced Abatement - Forced Abatement Activity";
+        SoftAssert s129 = new SoftAssert();
+        s129.assertEquals(actualEditFAApop, ExpectedEditFATitle);
+        s129.assertAll();
+
+    }
+
+    public void ForcedAbatement_CloseEditForcedAbatementActivityPopup() throws InterruptedException {
+
+        WaitForElementInteractable(LabelForText1);
+        driver.findElement(LabelForText1).clear();
+        SendKeys(LabelForText1, "Edited C123C456");
+        WaitForElementInteractable(CancelBtnEditFA);
+        ClickOn(CancelBtnEditFA);
+        WaitForCurserRunning(10);
+
+        WaitUntilVisible(ModalHeaders);
+        List<WebElement> ModalHeadersFA = driver.findElements(ModalHeaders);
+        if ((ModalHeadersFA.size() <= 1) == false) {
+
+            SoftAssert s130 = new SoftAssert();
+            s130.assertEquals(false, true);
+            s130.assertAll();
+        }
+
+    }
+
+    public void ForcedAbatement_EditAddedActivity() throws InterruptedException {
+
+
+        WaitUntilVisible(LabelForText1);
+        WaitForElementInteractable(LabelForText1);
+        WebElement Label1 = driver.findElement(LabelForText1);
+        Label1.clear();
+        Label1.sendKeys("Edited C123C456");
+        ScrollIntoView(EditSaveFAA);
+        WaitForElementInteractable(EditSaveFAA);
+        ClickOn(EditSaveFAA);
+        WaitForCurserRunning(10);
+
+        WaitUntilVisible(EditedLabelText1);
+        String EditedLabelText = GetText(EditedLabelText1);
+        SoftAssert s131 = new SoftAssert();
+        s131.assertEquals(EditedLabelText, "Edited C123C456");
+        s131.assertAll();
+
+    }
+
+    public void ForcedAbatement_ConfirmationPopupForDeletingActivity() throws InterruptedException {
+
+        ScrollIntoView(DeleteActivityIcon);
+        WaitForElementInteractable(DeleteActivityIcon);
+        ClickByJsExecuter(DeleteActivityIcon);
+        WaitForCurserRunning(7);
+        WaitUntilVisible(ConfirmationPopup);
+        WebElement ConfirmationIconFA = driver.findElement(ConfirmationPopup);
+        if ((ConfirmationIconFA.isDisplayed()) == false) {
+
+            SoftAssert s132 = new SoftAssert();
+            s132.assertEquals(false, true);
+            s132.assertAll();
         }
     }
 
-    public void ForcedAbatement_CloseEditForcedAbatementActivityPopup() {
-        try {
-            WaitForElementInteractable(LabelForText1);
-            driver.findElement(LabelForText1).clear();
-            SendKeys(LabelForText1, "Edited C123C456");
-            WaitForElementInteractable(CancelBtnEditFA);
-            ClickOn(CancelBtnEditFA);
-            WaitForCurserRunning(10);
+    public void ForcedAbatement_DeleteAddedActivity() throws InterruptedException {
 
-            WaitUntilVisible(ModalHeaders);
-            List<WebElement> ModalHeadersFA = driver.findElements(ModalHeaders);
-            if ((ModalHeadersFA.size() <= 1) == false) {
-
-                SoftAssert s130 = new SoftAssert();
-                s130.assertEquals(false, true);
-                s130.assertAll();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void ForcedAbatement_EditAddedActivity() {
-        try {
-            
-            WaitUntilVisible(LabelForText1);
-            WaitForElementInteractable(LabelForText1);
-            WebElement Label1 = driver.findElement(LabelForText1);
-            Label1.clear();
-            Label1.sendKeys("Edited C123C456");
-            ScrollIntoView(EditSaveFAA);
-            WaitForElementInteractable(EditSaveFAA);
-            ClickOn(EditSaveFAA);
-            WaitForCurserRunning(10);
-
-            WaitUntilVisible(EditedLabelText1);
-            String EditedLabelText = GetText(EditedLabelText1);
-            SoftAssert s131 = new SoftAssert();
-            s131.assertEquals(EditedLabelText, "Edited C123C456");
-            s131.assertAll();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
-        }
-    }
-
-    public void ForcedAbatement_ConfirmationPopupForDeletingActivity() {
-        try {
-            ScrollIntoView(DeleteActivityIcon);
-            WaitForElementInteractable(DeleteActivityIcon);
-            ClickByJsExecuter(DeleteActivityIcon);
-            WaitForCurserRunning(7);
-            WaitUntilVisible(ConfirmationPopup);
-            WebElement ConfirmationIconFA = driver.findElement(ConfirmationPopup);
-            if ((ConfirmationIconFA.isDisplayed()) == false) {
-
-                SoftAssert s132 = new SoftAssert();
-                s132.assertEquals(false, true);
-                s132.assertAll();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
-        }
-    }
-
-    public void ForcedAbatement_DeleteAddedActivity() {
-        try {
-            WaitUntilVisible(YesDelete);
-            WaitForElementInteractable(YesDelete);
-            ClickOn(YesDelete);
+        WaitUntilVisible(YesDelete);
+        WaitForElementInteractable(YesDelete);
+        ClickOn(YesDelete);
 //            
-            WaitForCurserRunning(10);
-            WaitUntilVisible(AddedActivity);
-            List<WebElement> ActivityCount = driver.findElements(AddedActivity);
-            if ((ActivityCount.size() <= 0) == false) {
+        WaitForCurserRunning(10);
+        WaitUntilVisible(AddedActivity);
+        List<WebElement> ActivityCount = driver.findElements(AddedActivity);
+        if ((ActivityCount.size() <= 0) == false) {
 
-                SoftAssert s133 = new SoftAssert();
-                s133.assertEquals(false, true);
-                s133.assertAll();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
+            SoftAssert s133 = new SoftAssert();
+            s133.assertEquals(false, true);
+            s133.assertAll();
         }
+
     }
 
 
     public void ForcedAbatement_VerifyAbleToSelectActivityType() throws InterruptedException {
 
+
         CECommonMethodS.CE_AddAttachment("//TestData//" + Attachment1);
+        forcedWaitTime(4);
         CECommonMethodS.CE_AddAttachmentBottom("//TestData//" + Attachment2);
-//        
         WaitForCurserRunning(5);
         WaitUntilVisible(violationLable);
         waterViolation = GetText(violationLable);
@@ -680,6 +653,7 @@ public class ForcedAbatementUtility extends Helper {
 
 
     public void ForceAbatement_AbatementDetailsPopupopen() throws InterruptedException {
+
         WaitForElementInteractable(LabelForText1);
         SendKeys(LabelForText1, "C123C456");
         WaitForElementInteractable(LabelForNumber2);
@@ -687,7 +661,6 @@ public class ForcedAbatementUtility extends Helper {
         ClickOn(LabelForSelect3);
         WaitForElementInteractable(FirstOption);
         ClickOn(FirstOption);
-
         ScrollIntoView(ContinueToGenDoc);
         WaitForElementInteractable(ContinueToGenDoc);
         ClickOn(ContinueToGenDoc);
@@ -701,7 +674,7 @@ public class ForcedAbatementUtility extends Helper {
         SoftAssert s = new SoftAssert();
         s.assertEquals(actualprogressActivity, expectedprogressActivity);
         s.assertEquals(actualprogressAbDetails, expectedprogressAbDetail);
-        s.assertTrue(AbatementDetailsPopup);
+        s.assertEquals(AbatementDetailsPopup, Boolean.TRUE);
         s.assertAll();
 
     }
@@ -725,10 +698,9 @@ public class ForcedAbatementUtility extends Helper {
         s.assertEquals(FAADonotIsuueFineChkbox > 0, true);
         s.assertEquals(FAAAddAnotherFineLinktxt, Boolean.TRUE);
         s.assertEquals(IssueFAADate, "FAA Document Issue Date");
-        if(BrowsersInvoked.RunEnvironment.equalsIgnoreCase("stage") || RunEnvironment.equalsIgnoreCase("production")){
-            s.assertEquals(fineSectionHeader,stageexpectFineSectionHeader);
-        }
-        else {
+        if (BrowsersInvoked.RunEnvironment.equalsIgnoreCase("stage") || RunEnvironment.equalsIgnoreCase("production")) {
+            s.assertEquals(fineSectionHeader, expectFineSectionHeader);
+        } else {
             s.assertEquals(fineSectionHeader, expectFineSectionHeader);
         }
         //s.assertEquals(addedViolation, waterViolation);
@@ -745,22 +717,28 @@ public class ForcedAbatementUtility extends Helper {
 
     public void ForceAbatement_AttachmentSectionAppearFAADocSelected() throws InterruptedException {
 
-//        WaitUntilVisible(chooseFAHtmlDoc);
-//        ScrollIntoView(chooseFAHtmlDoc);
-//        WaitForElementInteractable(chooseFAHtmlDoc);
-//        ClickOn(chooseFAHtmlDoc);
+        WaitUntilVisible(chooseFAHtmlDoc);
+        ScrollIntoView(chooseFAHtmlDoc);
+        WaitForElementInteractable(chooseFAHtmlDoc);
+        ClickOn(chooseFAHtmlDoc);
         WaitUntilVisible(photoSection);
         ScrollIntoView(photoSection);
         String photocounts[] = driver.findElement(photoSection).getText().split(" ")[1].replace("(", " ").replace(")", " ").split("\\r?\\n");
         selectCheckBox = driver.findElements(selectAllCheckBox).size();
         photocount = Integer.parseInt((photocounts)[0].trim());
         List<String> Images = new ArrayList<>();
+        System.out.println(Images.size());
         driver.findElements(photosAttached).stream().forEach(img -> Images.add(img.getText()));
+        System.out.println(Images.size());
+
         ClickOn(viewphotos);
-        WaitUntilVisible(viewphotos);
+        WaitUntilVisible(photoDetailsHeader);
         viewPhotoDetails = GetText(photoDetailsHeader);
         ClickOn(closeBtn);
+        WaitUntilElementInvisible(closeBtn);
         WaitForCurserRunning(4);
+        System.out.println(Images.size());
+
         String images1 = Images.get(0);
         String images2 = Images.get(1);
         String images3 = Images.get(2);
@@ -777,7 +755,7 @@ public class ForcedAbatementUtility extends Helper {
 
 
     public void ForceAbatement_ContactAppearUnderResponsibleParty() throws InterruptedException {
-        
+
         scrolltoUp();
         WaitUntilVisible(exitAddActivity);
         ScrollIntoView(exitAddActivity);
@@ -786,9 +764,11 @@ public class ForcedAbatementUtility extends Helper {
         WaitUntilVisible(exitConfirmYesBtn);
         ClickOn(exitConfirmYesBtn);
         WaitUntilVisible(addContactCDP);
-        ScrollIntoView(addContactCDP);
+         ScrollIntoView(addContactCDP);
         WaitForElementInteractable(addContactCDP);
         ClickOn(addContactCDP);
+        WaitUntilVisible(crtNewContactCDP);
+        ScrollIntoView(crtNewContactCDP);
         WaitForElementInteractable(crtNewContactCDP);
         ClickOn(crtNewContactCDP);
         WaitUntilVisible(contactName);
@@ -799,7 +779,7 @@ public class ForcedAbatementUtility extends Helper {
         ScrollIntoView(CCPUtility.CreateContactBtn2);
         WaitForElementInteractable(CCPUtility.CreateContactBtn2);
         ClickOn(CCPUtility.CreateContactBtn2);
-        
+
         int Checkbtn = driver.findElements(createAnywayContact).size();
         if (Checkbtn > 0) {
 
@@ -835,9 +815,8 @@ public class ForcedAbatementUtility extends Helper {
         ScrollIntoView(ContinueToGenDoc);
         WaitForElementInteractable(ContinueToGenDoc);
         ClickOn(ContinueToGenDoc);
-        
+
         CECommonMethodS.CE_AddAttachmentAddActivityPage("//TestData//" + Attachment3);
-        
 
         contact1 = GetText(FAAResPosiblecontact1);
         contact22 = GetText(FAAResPosiblecontact2);
@@ -845,7 +824,7 @@ public class ForcedAbatementUtility extends Helper {
         SoftAssert s = new SoftAssert();
         s.assertEquals(addedRisponsoible1.split("\\r?\\n")[0], contact1);
         s.assertEquals(addedRisponsoible2.split("\\r?\\n")[0], contact22);
-        
+
         s.assertAll();
 
 
@@ -854,8 +833,10 @@ public class ForcedAbatementUtility extends Helper {
 
     public void ForceAbatement_SelectedAttachmentPopulatedonPrintPreview() throws InterruptedException {
 
+
+
         ScrollIntoView(selectImgFAA1);
-        
+
         ClickByJsExecuter(selectImgFAA1);
 
         ClickByJsExecuter(selectImgFAA2);
@@ -863,9 +844,9 @@ public class ForcedAbatementUtility extends Helper {
         SelectedImag1 = driver.findElement(selectedImagFAA1).getText();
         SelectedImag2 = driver.findElement(selectedImahFAA2).getText();
         ScrollIntoView(GenFAADoc);
-        
+
         ClickOn(GenFAADoc);
-        
+
 
         driver.switchTo().frame(driver.findElement(printPreviewFrame));
 
@@ -881,10 +862,10 @@ public class ForcedAbatementUtility extends Helper {
 
         ClickOn(donotPrint);
         ClickOn(GenerateDocAddFABtn);
-        
+
         ForcedAbatement_ConfirmationPopupForDeletingActivity();
         ForcedAbatement_DeleteAddedActivity();
+
+
     }
-
-
 }

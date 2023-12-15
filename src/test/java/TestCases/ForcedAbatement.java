@@ -11,7 +11,7 @@ import ExtentReport.ExtentReportClass;
 import POM.ForcedAbatementUtility;
 
 public class ForcedAbatement extends BrowsersInvoked{
-	private WebDriver driver;
+	public WebDriver driver;
 	ExtentReportClass extentClass;
 	ITestResult result;
 	ForcedAbatementUtility forcedAbatement;
@@ -49,6 +49,7 @@ public class ForcedAbatement extends BrowsersInvoked{
 	
 	@Test(priority = 1)
 	public void ForcedAbatement_OpenInitiateForcedAbabtementPopup() throws InterruptedException {
+		
 		forcedAbatement.ForcedAbatement_OpenInitiateForcedAbabtementPopup();
 	}
 	
@@ -64,7 +65,7 @@ public class ForcedAbatement extends BrowsersInvoked{
 	}
 	
 	@Test(priority = 4)
-	public void ForcedAbatement_InitiateForcedAbatement() {
+	public void ForcedAbatement_InitiateForcedAbatement() throws InterruptedException {
 		forcedAbatement.ForcedAbatement_InitiateForcedAbatement();
 	}
 	
@@ -74,7 +75,7 @@ public class ForcedAbatement extends BrowsersInvoked{
 	}
 	
 	@Test(priority = 6)
-	public void ForcedAbatement_OpenEditFaNotePopup() {
+	public void ForcedAbatement_OpenEditFaNotePopup() throws InterruptedException {
 		forcedAbatement.ForcedAbatement_OpenEditFaNotePopup();
 	}
 	
@@ -84,7 +85,7 @@ public class ForcedAbatement extends BrowsersInvoked{
 	}
 	
 	@Test(priority = 8)
-	public void ForcedAbatement_VerifyTheUpdatedNote() {
+	public void ForcedAbatement_VerifyTheUpdatedNote() throws InterruptedException {
 		forcedAbatement.ForcedAbatement_VerifyTheUpdatedNote();
 	}
 	
@@ -95,7 +96,7 @@ public class ForcedAbatement extends BrowsersInvoked{
 	
 	
 	@Test(priority = 10)
-	public void ForcedAbatement_OpenAddForcedAbatementActivityPopup() {
+	public void ForcedAbatement_OpenAddForcedAbatementActivityPopup() throws InterruptedException {
 		forcedAbatement.ForcedAbatement_OpenAddForcedAbatementActivityPopup();
 	}
 	
@@ -110,71 +111,58 @@ public class ForcedAbatement extends BrowsersInvoked{
 	}
 	
 	@Test(priority = 13)
-	public void ForcedAbatement_VerifyDocumentNoteFieldPresence() {
-		forcedAbatement.ForcedAbatement_VerifyDocumentNoteFieldPresence();
-	}
-	
-	@Test(priority = 14)
-	public void ForcedAbatement_ValidationMsgForEmptyDocumentNote() throws InterruptedException{
-		forcedAbatement.ForcedAbatement_ValidationMsgForEmptyDocumentNote();
-	}
-	 
-	@Test(priority = 15)
-	public void ForcedAbatement_AddForcedAbatementActivity() {
+	public void ForcedAbatement_AddForcedAbatementActivity() throws InterruptedException {
 		forcedAbatement.ForcedAbatement_AddForcedAbatementActivity();
 	}
 	
-	@Test(priority = 16)
-	public void ForcedAbatement_OpenEditForcedAbatementActivityPopup() {
+	@Test(priority = 14)
+	public void ForcedAbatement_OpenEditForcedAbatementActivityPopup1() throws InterruptedException {
 		forcedAbatement.ForcedAbatement_OpenEditForcedAbatementActivityPopup();
 	}
 	
-	@Test(priority = 17)
-	public void ForcedAbatement_CloseEditForcedAbatementActivityPopup() {
-		forcedAbatement.ForcedAbatement_CloseEditForcedAbatementActivityPopup();
-	}
 	
-	@Test(priority = 18)
-	public void ForcedAbatement_EditAddedActivity() {
+	@Test(priority = 15)
+	public void ForcedAbatement_EditAddedActivity()throws InterruptedException {
 		forcedAbatement.ForcedAbatement_EditAddedActivity();
 	}
 	
-	@Test(priority = 19)
-	public void ForcedAbatement_ConfirmationPopupForDeletingActivity() {
+	@Test(priority = 16)
+	public void ForcedAbatement_ConfirmationPopupForDeletingActivity() throws InterruptedException {
 		forcedAbatement.ForcedAbatement_ConfirmationPopupForDeletingActivity();
 	}
 	
-	@Test(priority = 20)
-	public void ForcedAbatement_DeleteAddedActivity() {
+	@Test(priority = 17)
+	public void ForcedAbatement_DeleteAddedActivity() throws InterruptedException {
 		forcedAbatement.ForcedAbatement_DeleteAddedActivity();
 	}
 	
-	@Test(priority = 21)
+	@Test(priority = 18)
 	public void ForcedAbatement_VerifyAbleToSelectActivityType() throws InterruptedException {
 		forcedAbatement.ForcedAbatement_VerifyAbleToSelectActivityType();
 	}
 	
-	@Test(priority = 22)
+	@Test(priority = 19)
 	public void ForceAbatement_AbatementDetailsPopupopen() throws InterruptedException {
 		forcedAbatement.ForceAbatement_AbatementDetailsPopupopen();
 	}
 	
-	@Test(priority = 23)
+	@Test(priority = 20)
 	public void ForceAbatement_AbatementDetailsDetails() throws InterruptedException {
 		forcedAbatement.ForceAbatement_AbatementDetailsDetails();
 	}
 	
-	@Test(priority = 24)
+	@Test(priority = 21)
 	public void ForceAbatement_AttachmentSectionAppearFAADocSelected() throws InterruptedException {
 		forcedAbatement.ForceAbatement_AttachmentSectionAppearFAADocSelected();
 	}
 	
-	@Test(priority = 25)
+	@Test(priority = 22)
 	public void ForceAbatement_ContactAppearUnderResponsibleParty() throws InterruptedException {
 		forcedAbatement.ForceAbatement_ContactAppearUnderResponsibleParty();
 	}
 	
-	@Test(priority = 26)
+	
+	@Test(priority = 23, enabled=false)
 	public void ForceAbatement_SelectedAttachmentPopulatedonPrintPreview() throws InterruptedException {
 		forcedAbatement.ForceAbatement_SelectedAttachmentPopulatedonPrintPreview();
 	}

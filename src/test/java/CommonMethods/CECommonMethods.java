@@ -5,10 +5,13 @@ import POM.AppPreRequisiteUtility;
 import POM.TemplateManagementUtility;
 import POM.UserManagementUtility;
 import POM.CCPUtility;
+import POM.CDP_Utility;
 import POM.CLPUtility;
+import POM.CSLPUtility;
 import POM.CloseCaseUtility;
 import POM.ForcedAbatementUtility;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -19,26 +22,135 @@ import java.time.Duration;
 public class CECommonMethods extends BrowsersInvoked {
 	public WebDriver driver;
 	public Helper helper;
+	public CECommonMethods CEcommonMethod;
+	public CCPUtility ccp;
+	public CSLPUtility cslp;
+	public CDP_Utility cdp;
 	
 	public CECommonMethods(WebDriver driver) {
+		super();
 		this.driver = driver;
 		helper = new Helper(driver);
+		//cdp=new CDP_Utility(driver);
 		
 	}
 	
 	
-
     public  String searchLocationKey1O = PropertiesUtils.getPropertyValue("searchLocationKey1O");
     public  String searchLocationKey = PropertiesUtils.getPropertyValue("searchLocationKey");
+    public  boolean ProActiveBtn;
+
+    
+  
+    
+    public  String SetTestDataFilePath(String filename) {
+        String resourcePath ;
+        if (System.getProperty("os.name").equalsIgnoreCase("windows")) {
+
+            resourcePath = System.getProperty("user.dir") +"\\TestData\\" + filename;
+
+        }
+        else {
+           resourcePath = System.getProperty("user.dir") + "/TestData/"+filename;
+
+        }
+        return resourcePath ;
+    }
+   
+	public By addAttachmentCDP = By.xpath("//span[contains(text(),'Attachments')]//parent::h2//button[@class='attach-btn btn btn-primary']");
+
+    public  void CE_AddAttachmentCDP(String path) throws InterruptedException{
+
+        helper.WaitUntilVisible(addAttachmentCDP);
+        helper.ScrollIntoView(addAttachmentCDP);
+        helper.ClickByJsExecuter(addAttachmentCDP);
+        WebElement UploadFile4 = driver.findElement(By.xpath("//input[@type='file']"));
+        UploadFile4.sendKeys(path);
+        helper.WaitForCurserRunning(5);
+        helper.WaitForElementInteractable(ccp.AddBtn);
+        helper.ClickOn(ccp.AddBtn);
+    }
+    
+    public  void selectUserScheduleFollowUpInspection(String username) throws InterruptedException {
+        int check = helper.fineElementsSize(By.xpath("//button[contains(text(),'"+username+"')]"));
+        if(check > 0){
+            helper.WaitUntilVisible(By.xpath("//button[contains(text(),'"+username+"')]"));
+            helper.ClickOn(By.xpath("//button[contains(text(),'"+username+"')]"));
+        }
+       else{
+    	   helper.WaitUntilVisible(By.xpath("//label[text()='More...']"));
+    	   helper.ClickOn(By.xpath("//label[text()='More...']"));
+    	   helper.forcedWaitTime(5);
+    	   helper.WaitUntilVisible(By.xpath("(//input[@placeholder='Search...'])[2]"));
+    	   helper.SendKeys(By.xpath("(//input[@placeholder='Search...'])[2]"),username);
+    	   helper.forcedWaitTime(4);
+            helper.WaitUntilVisible(By.xpath("//li//b[text()='"+username+"']"));
+           helper.ClickOn(By.xpath("//li//b[text()='"+username+"']"));
+
+        }
+    }
+    
+    public  By performInspectionAndCreateCase = By.xpath("//button[text()='Create & Perform Inspection']");
+
+    
+    public  void createCaseAndPerformInspection() throws InterruptedException{
+        if(driver.findElements(ccp.CloseCDP).size() > 0){
+            CloseCaseDetailPage();
+        }
+        NavigateToCCP();
+        helper.WaitUntilVisible(ccp.CCPTitle);
+        helper.WaitForElementInteractable(ccp.CCButton);
+        Thread.sleep(5000);
+        CE_AddLocation();
+        CE_AddViolationParam("Wa");
+        CE_AddContact();
+        CE_AddAttachmentCrtCasePage(SetTestDataFilePath("pexels-mike-b-170811.jpg"));
+        CE_AddAttachmentCrtCasePage(SetTestDataFilePath("pexels-mike-b-810357.jpg"));
+        helper.WaitUntilVisible(ccp.CreateCaseButton);
+        helper.ScrollIntoView(ccp.CreateCaseButton);
+        helper.WaitForElementInteractable(ccp.CreateCaseButton);
+        helper.ClickOn(ccp.CreateCaseButton);
+        helper.WaitForCurserRunning(5);
+        helper.WaitUntilVisible(By.xpath("//h5[text()='Assign Case To']//parent::div//button[@class='square-btn btn btn-primary']"));
+        helper.WaitUntilPresent(By.xpath("//h5[text()='Assign Case To']//parent::div//button[@class='square-btn btn btn-primary']"));
+        helper.WaitUntilVisible(ccp.performInspectionToogel);
+        helper.ClickOn(ccp.performInspectionToogel);
+        helper.WaitUntilVisible(ccp.proActiveButton);
+        ProActiveBtn =   helper.ElementIsDisplayed(ccp.proActiveButton);
+        helper.WaitUntilVisible(ccp.performInspectionAndCreateCase);
+        helper.ScrollIntoView(ccp.performInspectionAndCreateCase);
+        helper.ClickOn(ccp.performInspectionAndCreateCase);
+        helper.WaitForCurserRunning(5);
+        helper.WaitUntilVisible(By.xpath("//h1[contains(text(),'Verification Inspection')]"));
+    }
+    
+    public  void SearchCaseOnCLP (String caseId) throws InterruptedException{
+
+
+        NavigationTo_CaseListPage();
+        helper.WaitUntilPresent(cslp.CSLPSearchField);
+        helper.WaitUntilPresent(cslp.CSLPSearchField);
+        helper.Clear(cslp.CSLPSearchField);
+        helper.WaitForElementInteractable(cslp.CSLPSearchField);
+        helper.SendKeys(cslp.CSLPSearchField,caseId);
+        helper.WaitForCurserRunning(2);
+        helper.WaitUntilVisible(By.xpath("//a[text()='"+caseId+"']"));
+        helper.WaitUntilVisible(By.xpath("//a[text()='"+caseId+"']"));
+        helper.WaitForElementInteractable(By.xpath("//a[text()='"+caseId+"']"));
+
+    }
+    
+    
     public  void CE_CreateACase() throws InterruptedException {
 
     	helper.waitForPresenceandVisiblity(AppPreRequisiteUtility.AppMenuIcon);
     	helper.WaitForElementInteractable(AppPreRequisiteUtility.AppMenuIcon);
-        WebElement CCPBtnJSE =helper.findElementByCssSelector("div.app-header__new");
+        WebElement CCPBtnJSE =helper.FindElementByXPath("//*[@class='app-header__new']");
     	//WebElement CCPBtnJSE =helper.GetWebElementByJS("#header > div.app-header__right > div:nth-child(2) > div.app-header__new')");
         helper.WaitUntilVisible(CCPBtnJSE);
         helper.WaitUntilVisible(CCPBtnJSE);
         helper.WaitForElementInteractable(CCPBtnJSE);
+        helper.WaitUntilClickable(CCPBtnJSE);
         helper.moveToWebElement(CCPBtnJSE);
         helper.ClickOnWE20(CCPBtnJSE);
         helper.WaitUntilVisible(CCPUtility.CCPOption);
@@ -70,7 +182,7 @@ public class CECommonMethods extends BrowsersInvoked {
     	helper.ClickByJsExecuter(CCPUtility.addAttachmentCCP);
         WebElement UploadFile4 = driver.findElement(By.xpath("//input[@type='file']"));
         String testtDataPath = System.getProperty("user.dir");
-        UploadFile4.sendKeys(testtDataPath + path);
+        UploadFile4.sendKeys(path);
         helper.ClickOn(CCPUtility.AddBtn);
     }
 
@@ -131,8 +243,19 @@ public class CECommonMethods extends BrowsersInvoked {
     	helper.ClickOn(CCPUtility.ViolationSearchBox);
     	helper.SendKeys(CCPUtility.ViolationSearchBox, "Wa");
     	helper. WaitUntilVisible(By.xpath("//div[@class='list-label']//b[contains(text(),'Wa')]"));
+    	try
+    	{
     	helper.WaitForElementInteractable(CCPUtility.ViolationsList);
     	helper.ClickOn(CCPUtility.ViolationsList);
+    	}
+    	catch (StaleElementReferenceException e)
+    	{
+    		WebElement violationsList = driver.findElement(By.xpath("//div[@class='react-autosuggest__suggestion-element']/div"));
+            helper.WaitForElementInteractable(violationsList);
+            helper.ClickOn(violationsList);
+    	}
+    	
+    	//div[@class='react-autosuggest__suggestion-element']/div
     }
 
 

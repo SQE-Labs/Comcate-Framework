@@ -1,6 +1,9 @@
 package BrowsersBase;
 
 import java.io.File;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -66,8 +69,15 @@ import CommonMethods.PropertiesUtils;
          options.setBrowserVersion(PropertiesUtils.getPropertyValue("ChromeVersion"));
          options.addArguments("--remote-allow-origins=*");
          options.setPageLoadStrategy(PageLoadStrategy.NONE);
+         //options.addArguments("--headless");
+
          WebDriver driver = new ChromeDriver(options);
          driver.manage().window().maximize();
+//         driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+//         driver.manage().timeouts().setScriptTimeout(Duration.ofSeconds(10));
+//         driver.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS);
+
+
     	 return driver;
         
             

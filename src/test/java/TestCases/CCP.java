@@ -12,7 +12,7 @@ import ExtentReport.ExtentReportClass;
 import POM.CCPUtility;
 
 public class CCP extends BrowsersInvoked {
-	private WebDriver driver;
+	public WebDriver driver;
 	ExtentReportClass extentClass;
 	ITestResult result;
 	CCPUtility ccp;

@@ -2,9 +2,11 @@ package POM;
 
 import BrowsersBase.BrowsersInvoked;
 
+
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
@@ -24,12 +26,14 @@ public class CloseCaseUtility extends Helper {
 	public WebDriver driver;
 	LoginUtility log;
 	CECommonMethods ceMethods;
+	ForcedAbatementUtility FA;
 
 	public CloseCaseUtility(WebDriver driver) {
 		super(driver);
 		this.driver = driver;
 		log = new LoginUtility(driver);
 		ceMethods = new CECommonMethods(driver);
+		FA= new ForcedAbatementUtility(driver);
 
 	}
 
@@ -59,53 +63,56 @@ public class CloseCaseUtility extends Helper {
 	public void CloseCase_PreRequisite() throws InterruptedException {
 
 		driver.navigate().to(BrowsersInvoked.URLDashboard);
-		WaitForCurserRunning(5);
-		WaitUntilVisible(CLPUtility.CLP);
-		WaitUntilPresent(CLPUtility.CLP);
-		WaitForElementInteractable(CLPUtility.CLP);
-		ClickByJsExecuter(CLPUtility.CLP);
-		WaitForCurserRunning(4);
-		WaitUntilVisible(ReopenCasesUtility.StatusColumnSort);
-		WaitUntilPresent(ReopenCasesUtility.StatusColumnSort);
-		ScrollIntoView(ReopenCasesUtility.StatusColumnSort);
-		WaitForElementInteractable(ReopenCasesUtility.StatusColumnSort);
-		int checkOpen = driver.findElements(ReopenCasesUtility.ReOpenCaseGrid).size();
-		if (checkOpen > 0) {
-			WaitUntilPresent(ReopenCasesUtility.ReOpenCaseGrid);
-			ScrollIntoView(ReopenCasesUtility.ReOpenCaseGrid);
-			WaitUntilPresent(ReopenCasesUtility.ReOpenCaseGrid);
-			WaitForElementInteractable(ReopenCasesUtility.ReOpenCaseGrid);
-			ClickByJsExecuter(ReopenCasesUtility.ReOpenCaseGrid);
+		 WaitForCurserRunning(5);
+	        WaitUntilVisible(CLPUtility.CLP);
+	        WaitUntilPresent(CLPUtility.CLP);
+	        WaitForElementInteractable(CLPUtility.CLP);
+	        ClickByJsExecuter(CLPUtility.CLP);
+	        WaitForCurserRunning(4);
+	        WaitUntilElementInvisible(By.cssSelector("div.table-container__table table_disabled"));
+	        WaitUntilVisible(By.cssSelector("div.table-container__table"));
+	       
+	        
+	        
+	        ClickOn(By.xpath("(//*[@class='dropdown__arrow'])[4]"));
+//	        WaitUntilVisible(By.xpath("//*[@name='Closed']"));
+	        forcedWaitTime(5);
+	        ClickByJsExecuter(By.xpath("//*[@name='Closed']"));
+	        forcedWaitTime(5);
+	        ClickOn(By.xpath("(//*[@class='dropdown__arrow'])[4]"));
+	        WaitUntilVisible(By.xpath("//div[@class='table-container__table table_disabled']"));
+	        WaitUntilInvisible(By.xpath("//div[@class='table-container__table table_disabled']"));
+	 
+	        //Add if else if cases returned are > 0 or not
+	        ClickByJsExecuter(By.xpath("//div[@role='gridcell']/a"));
+	        
+	        WaitForCurserRunning(4);
+	        WaitUntilVisible(FA.MoreBtn);
+	        WaitUntilPresent(FA.MoreBtn);
+	        WaitForElementInteractable(FA.MoreBtn);
+	        ClickByJsExecuter(FA.MoreBtn);
+	        ClickByJsExecuter(By.xpath("//li[text()='Reopen Case']"));
+	      
+	        ClickByJsExecuter(By.xpath("//button[text()='Non-Compliant']"));
 
-		} else {
-			WaitUntilVisible(ReopenCasesUtility.StatusColumnSort);
-			WaitUntilPresent(ReopenCasesUtility.StatusColumnSort);
-			WaitForElementInteractable(ReopenCasesUtility.StatusColumnSort);
-			ClickOn(ReopenCasesUtility.StatusColumnSort);
-			WaitUntilVisible(ReopenCasesUtility.ReOpenCaseGrid);
-			WaitUntilPresent(ReopenCasesUtility.ReOpenCaseGrid);
-			int checktOpen = driver.findElements(ReopenCasesUtility.ReOpenCaseGrid).size();
-			if (checktOpen > 0) {
-				ScrollIntoView(ReopenCasesUtility.ReOpenCaseGrid);
-				WaitUntilPresent(ReopenCasesUtility.ReOpenCaseGrid);
-				WaitForElementInteractable(ReopenCasesUtility.ReOpenCaseGrid);
-				WaitForElementInteractable(ReopenCasesUtility.ReOpenCaseGrid);
-				ClickByJsExecuter(ReopenCasesUtility.ReOpenCaseGrid);
+	        ClickByJsExecuter(By.xpath("//button[text()='Reopen Case']"));
 
-			}
-		}
 
-		WaitForCurserRunning(4);
-		WaitUntilVisible(ForcedAbatementUtility.MoreBtn);
-		WaitUntilPresent(ForcedAbatementUtility.MoreBtn);
-		WaitForElementInteractable(ForcedAbatementUtility.MoreBtn);
-		ClickByJsExecuter(ForcedAbatementUtility.MoreBtn);
-		WaitUntilVisible(CloseCaseBtn);
-		WaitUntilPresent(CloseCaseBtn);
-		Constant.CloseCaseText = GetText(CloseCaseBtn);
-		SoftAssert s134 = new SoftAssert();
-		s134.assertEquals(Constant.CloseCaseText, "Close Case");
-		s134.assertAll();
+
+	        
+	        
+
+	        WaitForCurserRunning(4);
+	        WaitUntilVisible(FA.MoreBtn);
+	        WaitUntilPresent(FA.MoreBtn);
+	        WaitForElementInteractable(FA.MoreBtn);
+	        ClickByJsExecuter(FA.MoreBtn);
+	        WaitUntilVisible(CloseCaseBtn);
+	        WaitUntilPresent(CloseCaseBtn);
+	        String CloseCaseText = GetText(CloseCaseBtn);
+	        SoftAssert s134 = new SoftAssert();
+	        s134.assertEquals(CloseCaseText, "Close Case");
+	        s134.assertAll();
 
 	}
 
@@ -231,11 +238,17 @@ public class CloseCaseUtility extends Helper {
 		ceMethods.CE_AddLocation();
 		ceMethods.CE_AddViolation();
 
+		Thread.sleep(5000);
 		WaitUntilVisible(CCPUtility.CCButton);
 		WaitUntilPresent(CCPUtility.CCButton);
-		ScrollIntoView(CCPUtility.CCButton);
-		WaitForElementInteractable(CCPUtility.CCButton);
+		//ScrollIntoView(CCPUtility.CCButton);
 		ClickByJsExecuter(CCPUtility.CCButton);
+		WaitForElementInteractable(CCPUtility.CCButton);
+		
+//		Point elementLocation = driver.findElement(CCPUtility.CCButton).getLocation();
+//		int xCoordinate = elementLocation.getX();
+//        int yCoordinate = elementLocation.getY();
+		//moveToWebElementAndClickByCordinates(CCPUtility.CCButton,xCoordinate,yCoordinate);
 		WaitForCurserRunning(5);
 	    WaitUntilVisible(By.xpath("//h5[text()='Assign Case To']//parent::div//button[@class='square-btn btn btn-primary']"));
 	    WaitUntilPresent(By.xpath("//h5[text()='Assign Case To']//parent::div//button[@class='square-btn btn btn-primary']"));
